@@ -12,9 +12,11 @@ RUN apt-get update -qq && apt-get install -y \
     syslog-ng
 
 ADD openjdk-libjvm.conf /etc/ld.so.conf.d/openjdk-libjvm.conf
-RUN ldconfig
 
-RUN groupadd -g 601 abdsl && useradd -u 1723 -G abdsl -M -s /usr/sbin/nologin abxdsl
+RUN ldconfig && \
+          groupadd -g 601 abdsl && \
+          useradd -u 1723 -G abdsl -M -s /usr/sbin/nologin abxdsl && \
+          sed -i 's/^#\(SYSLOGNG_OPTS="--no-caps"\)/\1/g' /etc/default/syslog-ng
 
 EXPOSE 514/udp
 EXPOSE 601/tcp
